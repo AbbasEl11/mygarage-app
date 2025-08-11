@@ -1,2 +1,217 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+/* ====== Design tokens (safe to tweak centrally) ====== */
+:root {
+  --glass-bg: rgba(17, 25, 40, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.125);
+  --glass-border-strong: rgba(255, 255, 255, 0.255);
+  --text-strong: rgba(255, 255, 255, 0.98);
+  --text: #fff;
+
+  --accent: rgba(0, 212, 255, 0.9);
+  --accent-border: rgba(0, 212, 255, 0.6);
+  --danger: rgba(255, 0, 0, 0.9);
+
+  --radius-lg: 12px;
+  --radius-md: 8px;
+
+  --elev-drop: 0 30px 10px rgba(0, 0, 0, 0.125);
+  --elev-drop-hover: 0 10px 5px rgba(0, 0, 0, 0.125);
+
+  --transition: all 0.3s ease;
+}
+
+/* ====== Spacing helpers ====== */
+input {
+  margin-top: 28px;
+}
+.select-wrapper-inner {
+  margin-top: 14px !important;
+}
+
+/* ====== Grid & cards ====== */
+.car-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* consistent spacing between cards */
+}
+
+.car-card {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 10px;
+  filter: drop-shadow(var(--elev-drop));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 300px;
+  height: 100%;
+}
+
+/* Wrap for name, actions and meta info */
+.car-details {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.car-details-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* ====== Media ====== */
+.banner-image {
+  background-position: center;
+  background-size: cover;
+  height: 200px;
+  width: 100%;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--glass-border-strong);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg) !important;
+}
+
+.details-image {
+  width: 100%;
+  border-radius: var(--radius-md);
+}
+
+/* ====== Typography ====== */
+h1 {
+  font-family: "Righteous", sans-serif;
+  color: var(--text-strong);
+  text-transform: uppercase;
+  font-size: 2.1rem;
+  padding: 0;
+}
+
+p {
+  color: var(--text);
+  font-family: "Lato", sans-serif;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 150%;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+a {
+  text-decoration: none;
+}
+
+.car-name {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+}
+
+/* ====== Buttons ====== */
+.button-wrapper {
+  margin-top: 18px;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn + .btn {
+  margin-left: 10px;
+}
+
+/* Shared outline base (accent look) */
+.outline,
+.outline-delete {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+/* Primary filled button */
+.fill {
+  background: var(--accent);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: bold;
+  filter: drop-shadow(0);
+}
+
+/* Hover states (scaled for tactile feedback) */
+.outline:hover {
+  transform: scale(1.125);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.outline-delete:hover {
+  transform: scale(1.125);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.fill:hover {
+  transform: scale(1.125);
+  border-color: rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(var(--elev-drop-hover));
+}
+
+/* ====== Detail layout ======
+   Two-column detail grid: left labels (shrink-to-content),
+   right values (readable line length). Centers as a unit. */
+.details-wrap {
+  display: grid;
+  grid-template-columns: max-content minmax(220px, 42ch);
+  column-gap: 150px;
+  row-gap: 10px;
+  width: max-content;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Fallback for older engines without width:max-content */
+@supports not (width: max-content) {
+  .details-wrap {
+    display: inline-grid;
+    margin: 0 auto;
+  }
+}
+
+.detail-label {
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  padding-left: 250px;
+}
+
+.detail-value {
+  width: 100%;
+  text-align: left;
+  word-break: break-word;
+}
+
+/* ====== Responsive ======
+   Stack detail grid on very narrow screens */
+@media (max-width: 480px) {
+  .details-wrap {
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding: 0 8px;
+  }
+}
