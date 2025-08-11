@@ -74,7 +74,7 @@ mygarage-app/
 ### Steps
 ```bash
 # Clone
-git clone https://github.com/YOUR-GITHUB-NAME/mygarage-app.git
+git clone https://github.com/AbbasEl11/mygarage-app.git
 cd mygarage-app
 
 # Install dependencies
