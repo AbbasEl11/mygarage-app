@@ -65,6 +65,8 @@ You can explore available endpoints, view request/response schemas, and test API
 ## Screenshots
 
 **MyGarage (Desktop)**
+
+
 ![Home Desktop](screenshots/MyGarage-Desktop-Home.png)
 ![Inventory Desktop](screenshots/MyGarage-Desktop-Inventory.png)
 ![Add Car Desktop](screenshots/MyGarage-Desktop-AddCar.png)
@@ -72,6 +74,8 @@ You can explore available endpoints, view request/response schemas, and test API
 
 
 **MyGarage (Mobile)**
+
+
 ![Home Mobile](screenshots/MyGarage-Mobile-Home.png)
 ![Inventory Mobile](screenshots/MyGarage-Mobile-Inventory.png)
 ![Navbar Mobile](screenshots/MyGarage-Mobile-Navbar.png)
