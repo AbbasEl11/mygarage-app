@@ -1,4 +1,11 @@
-import { IonHeader, IonToolbar, IonTitle, IonButtons, IonButton } from '@ionic/react';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonMenuButton
+} from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 
 const Header: React.FC = () => {
@@ -6,13 +13,29 @@ const Header: React.FC = () => {
 
   return (
     <IonHeader>
-      <IonToolbar>
-        <IonTitle>MyGarage</IonTitle>
-        <IonButtons slot="end">
-          <IonButton onClick={() => history.push('/home')}>Home</IonButton>
-          <IonButton onClick={() => history.push('/inventory')}>Inventar</IonButton>
-          <IonButton onClick={() => history.push('/add-car')}>Hinzufügen</IonButton>
-        </IonButtons>
+      <IonToolbar className="navbar-toolbar">
+        <div className="navbar">
+          {/* Left: burger (mobile) */}
+          <div className="menu-button">
+            <IonButtons>
+              <IonMenuButton />
+            </IonButtons>
+          </div>
+
+          {/* Center: logo/title */}
+          <div className="logoNavbar">
+            <img src="../assets/icons/logo.png" alt="Logo" />
+          </div>
+
+          {/* Right: desktop nav buttons */}
+          <div className="navbar-buttons">
+            <IonButtons>
+              <IonButton onClick={() => history.push('/home')}>Home</IonButton>
+              <IonButton onClick={() => history.push('/inventory')}>Inventar</IonButton>
+              <IonButton onClick={() => history.push('/add-car')}>Hinzufügen</IonButton>
+            </IonButtons>
+          </div>
+        </div>
       </IonToolbar>
     </IonHeader>
   );

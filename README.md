@@ -42,6 +42,44 @@ The UI is functional but intentionally not fully polished yet, as most effort we
 
 ---
 
+## Demo Data
+
+To load demo vehicles into the database, run:
+
+```
+python manage.py loaddata cars_fixture.json
+```
+
+This will insert sample `Car` records (with image paths) into your local database.
+
+---
+
+## 📚 API Documentation (Swagger)
+
+Interactive API documentation is available via Swagger UI.
+
+**URL:** [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/)
+
+You can explore available endpoints, view request/response schemas, and test API calls directly from the browser.
+
+## Screenshots
+
+**MyGarage (Desktop)**
+![Home Desktop](screenshots/MyGarage-Desktop-Home.png)
+![Inventory Desktop](screenshots/MyGarage-Desktop-Inventory.png)
+![Add Car Desktop](screenshots/MyGarage-Desktop-AddCar.png)
+![Add Car 2 Desktop](screenshots/MyGarage-Desktop-AddCar2.png)
+
+
+**MyGarage (Mobile)**
+![Home Mobile](screenshots/MyGarage-Mobile-Home.png)
+![Inventory Mobile](screenshots/MyGarage-Mobile-Inventory.png)
+![Navbar Mobile](screenshots/MyGarage-Mobile-Navbar.png)
+![Add Car Mobile](screenshots/MyGarage-Mobile-AddCar.png)
+![Add Car 2 Mobile](screenshots/MyGarage-Mobile-AddCar2.png)
+![Add Car 3 Mobile](screenshots/MyGarage-Mobile-AddCar3.png)
+
+
 ## 📂 Project Structure
 
 ```

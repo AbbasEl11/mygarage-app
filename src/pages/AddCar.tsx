@@ -22,6 +22,8 @@ import {
   IonButton,
   IonLabel,
   IonImg,
+  IonAccordionGroup,
+  IonAccordion,
 } from '@ionic/react';
 import Header from '../components/Header';
 import { useHistory } from 'react-router-dom';
@@ -226,7 +228,7 @@ const AddCar: React.FC = () => {
           <IonCardContent>
             <IonGrid>
               <IonRow>
-                <IonCol size="6">
+                <IonCol  size="12" sizeMd="6">
                   <IonItem>
                     <IonInput
                       label="Marke"
@@ -291,7 +293,7 @@ const AddCar: React.FC = () => {
                   </IonItem>
                 </IonCol>
 
-                <IonCol size="6">
+                <IonCol size="12" sizeMd="6">
                   <IonItem>
                     <IonSelect
                       label="Kraftstoff"
@@ -364,59 +366,74 @@ const AddCar: React.FC = () => {
           </IonCardContent>
         </IonCard>
 
-        {/* Equipment (Ausstattung) */}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Ausstattung</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonGrid>
-              {Array.from({ length: Math.ceil(ausstattung.length / 4) }, (_, r) => (
-                <IonRow key={r}>
-                  {ausstattung.slice(r * 4, r * 4 + 4).map((f) => (
-                    <IonCol size="3" key={f}>
-                      <IonItem lines="none">
-                        <IonCheckbox
-                          checked={checkboxes[f] || false}
-                          onIonChange={() => handleCheckboxChange(f)}
-                          slot="start"
-                        />
-                        <IonLabel>{f}</IonLabel>
-                      </IonItem>
-                    </IonCol>
-                  ))}
-                </IonRow>
-              ))}
-            </IonGrid>
-          </IonCardContent>
-        </IonCard>
+{/* Ausstattung */}
+<IonCard>
+  <IonCardHeader><IonCardTitle>Ausstattung</IonCardTitle></IonCardHeader>
+  <IonCardContent>
+    <IonAccordionGroup>
+      <IonAccordion value="ausstattung-acc">
+        <IonItem slot="header">
+          <IonLabel>Show/Hide</IonLabel>
+        </IonItem>
+        <div slot="content">
+          <IonGrid>
+            {Array.from({ length: Math.ceil(ausstattung.length / 4) }, (_, r) => (
+              <IonRow key={r}>
+                {ausstattung.slice(r * 4, r * 4 + 4).map((f) => (
+                  <IonCol size="12" sizeSm="6" sizeMd="4" sizeLg="3" key={f}>
+                    <IonItem lines="none">
+                      <IonCheckbox
+                        checked={checkboxes[f] || false}
+                        onIonChange={() => handleCheckboxChange(f)}
+                        slot="start"
+                      />
+                      <IonLabel>{f}</IonLabel>
+                    </IonItem>
+                  </IonCol>
+                ))}
+              </IonRow>
+            ))}
+          </IonGrid>
+        </div>
+      </IonAccordion>
+    </IonAccordionGroup>
+  </IonCardContent>
+</IonCard>
 
-        {/* Extras */}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Extras</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonGrid>
-              {Array.from({ length: Math.ceil(extras.length / 4) }, (_, r) => (
-                <IonRow key={r}>
-                  {extras.slice(r * 4, r * 4 + 4).map((f) => (
-                    <IonCol size="3" key={f}>
-                      <IonItem lines="none">
-                        <IonCheckbox
-                          checked={checkboxes[f] || false}
-                          onIonChange={() => handleCheckboxChange(f)}
-                          slot="start"
-                        />
-                        <IonLabel>{f}</IonLabel>
-                      </IonItem>
-                    </IonCol>
-                  ))}
-                </IonRow>
-              ))}
-            </IonGrid>
-          </IonCardContent>
-        </IonCard>
+{/* Extras */}
+<IonCard>
+  <IonCardHeader><IonCardTitle>Extras</IonCardTitle></IonCardHeader>
+  <IonCardContent>
+    <IonAccordionGroup>
+      <IonAccordion value="extras-acc">
+        <IonItem slot="header">
+          <IonLabel>Show/Hide</IonLabel>
+        </IonItem>
+        <div slot="content">
+          <IonGrid>
+            {Array.from({ length: Math.ceil(extras.length / 4) }, (_, r) => (
+              <IonRow key={r}>
+                {extras.slice(r * 4, r * 4 + 4).map((f) => (
+                  <IonCol size="12" sizeSm="6" sizeMd="4" sizeLg="3" key={f}>
+                    <IonItem lines="none">
+                      <IonCheckbox
+                        checked={checkboxes[f] || false}
+                        onIonChange={() => handleCheckboxChange(f)}
+                        slot="start"
+                      />
+                      <IonLabel>{f}</IonLabel>
+                    </IonItem>
+                  </IonCol>
+                ))}
+              </IonRow>
+            ))}
+          </IonGrid>
+        </div>
+      </IonAccordion>
+    </IonAccordionGroup>
+  </IonCardContent>
+</IonCard>
+
 
         {/* Additional notes */}
         <IonCard>
@@ -455,42 +472,17 @@ const AddCar: React.FC = () => {
               />
             </IonItem>
 
-            {previews.length > 0 && (
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '8px',
-                  marginTop: '12px',
-                }}
-              >
-                {previews.map((url, i) => (
-                  <div key={i} style={{ position: 'relative', width: '15%', marginRight: '20px' }}>
-                    <IonImg
-                      src={url}
-                      style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
-                    />
-                    <button
-                      onClick={() => handleRemoveFile(i)}
-                      style={{
-                        position: 'absolute',
-                        top: '4px',
-                        right: '4px',
-                        background: 'rgba(0,0,0,0.5)',
-                        border: 'none',
-                        color: 'white',
-                        borderRadius: '50%',
-                        width: '20px',
-                        height: '20px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+{previews.length > 0 && (
+  <div className="upload-grid">
+    {previews.map((url, i) => (
+      <div key={i} className="upload-cell">
+        <IonImg src={url} className="upload-thumb" />
+        <button className="upload-remove" onClick={() => handleRemoveFile(i)}>×</button>
+      </div>
+    ))}
+  </div>
+)}
+
           </IonCardContent>
         </IonCard>
 

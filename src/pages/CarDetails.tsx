@@ -84,9 +84,7 @@ const CarDetails: React.FC = () => {
 
           {/* Visible car name below gallery */}
           <div className="car-name">
-            <p>
-              {car.marke} {car.modell}
-            </p>
+             <h2>{car.marke} {car.modell}</h2> 
           </div>
 
           {/* Two-column spec grid (labels/values) */}
@@ -98,10 +96,10 @@ const CarDetails: React.FC = () => {
             <div className="detail-value">{car.farbe}</div>
 
             <div className="detail-label">Kilometerstand</div>
-            <div className="detail-value">{car.km} km</div>
+            <div className="detail-value">{car.kilometer} km</div>
 
             <div className="detail-label">Unfallhistorie</div>
-            <div className="detail-value">{car.unfall}</div>
+            <div className="detail-value">{car.unfallhistorie}</div>
 
             <div className="detail-label">Preis</div>
             <div className="detail-value">{car.preis} €</div>
@@ -141,17 +139,7 @@ const CarDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Optional: render uploaded file list if present */}
-          {car.dateien?.length > 0 && (
-            <>
-              <strong>Uploads:</strong>
-              <ul>
-                {car.dateien.map((f: string, i: number) => (
-                  <li key={i}>{f}</li>
-                ))}
-              </ul>
-            </>
-          )}
+       
         </IonCard>
       </IonContent>
     </IonPage>

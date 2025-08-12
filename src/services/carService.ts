@@ -20,6 +20,7 @@ export interface CarPayload {
 
 export interface Car extends CarPayload {
   id: number;
+   images: { id: number; image: string }[];
 }
 
 const BASE = import.meta.env.VITE_API_BASE_URL;
