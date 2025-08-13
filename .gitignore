@@ -17,6 +17,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 /.nx
 /.nx/cache
 /.vscode/*
@@ -29,3 +30,21 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+
+# Android builds / Capacitor artifacts
+/android/.gradle/
+/android/app/build/
+/android/build/
+/android/capacitor-cordova-android-plugins/build/
+/android/app/src/main/assets/public/
+
+# iOS (falls später hinzugefügt)
+/ios/build/
+/ios/Pods/
+
+# Vite (du hast /dist schon drin – lassen!)
+# /dist
+
+# Cypress output (optional, je nach Setup)
+/cypress/videos/
+/cypress/screenshots/

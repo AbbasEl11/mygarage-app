@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
           {/* Center: logo/title */}
           <div className="logoNavbar">
-            <img src="../assets/icons/logo.png" alt="Logo" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Logo" />
           </div>
 
           {/* Right: desktop nav buttons */}

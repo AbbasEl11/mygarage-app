@@ -1,0 +1,9 @@
+{
+  "short_name": "MyGarage",
+  "name": "MyGarage App",
+
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000"
+}

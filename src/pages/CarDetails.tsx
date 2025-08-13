@@ -11,21 +11,26 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
+  IonButton,
+  IonIcon,
 } from '@ionic/react';
 import storage from '../storage';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { chevronBackOutline } from 'ionicons/icons';
 
 interface Params {
   id: string;
 }
+const base = (import.meta.env.BASE_URL || '/mygarage-app/').replace(/\/+$/, '')
+const fallback = `${base}/#/inventory`;   
 
 const CarDetails: React.FC = () => {
   const { id } = useParams<Params>();
   const history = useHistory(); // kept as in original file
-  const [car, setCar] = useState<any>(null);
+  const [car, setCar] = useState<any | undefined>(undefined); 
 
   /** Fetch car by route `id` from local storage once `id` changes. */
   useEffect(() => {
@@ -49,8 +54,19 @@ const CarDetails: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/inventory" />
+<IonButtons slot="start">
+            <IonButton
+              onClick={() => {
+                if (history.length > 1) {
+                  history.goBack();
+                } else {
+                  window.location.href = fallback;
+                }
+              }}
+            >
+              <IonIcon icon={chevronBackOutline} slot="start" />
+              Zurück
+            </IonButton>
           </IonButtons>
           <IonTitle>
             {car.marke} {car.modell}

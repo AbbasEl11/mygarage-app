@@ -48,6 +48,13 @@ input {
   align-items: center;
   text-align: center;
   width: 300px;
+  transition: scale 0.3s ease;
+}
+
+.car-card:hover {
+  transform: scale(1.025);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .car-details {
@@ -405,4 +412,8 @@ a {
   cursor: pointer;
   line-height: 20px;
   font-size: 16px;
+}
+
+ion-toolbar {
+  padding: 20px;
 }

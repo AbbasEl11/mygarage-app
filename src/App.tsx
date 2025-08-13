@@ -1,3 +1,4 @@
+// App.tsx
 import storage from './storage';
 storage.create();
 
@@ -19,40 +20,25 @@ import {
   IonMenuToggle,
   IonIcon
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import Inventory from './pages/Inventory';
 import AddCar from './pages/AddCar';
 import CarDetails from './pages/CarDetails';
 import { closeOutline } from 'ionicons/icons';
-
-/* Core CSS required for Ionic components */
+import { IonReactHashRouter } from '@ionic/react-router';
 import '@ionic/react/css/core.css';
-
-/* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
-
-/* Optional CSS utilities */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
-
-/* Ionic Dark Mode */
 import '@ionic/react/css/palettes/dark.system.css';
-
-/* Theme variables */
 import './theme/variables.css';
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
+    {/* ✅ HashRouter statt IonReactRouter */}
+<IonReactHashRouter basename="/mygarage-app">
       {/* Slide-in menu (mobile) */}
       <IonMenu contentId="main" side="end">
         <IonHeader>
@@ -75,13 +61,11 @@ const App: React.FC = () => (
                 <IonLabel>Home</IonLabel>
               </IonItem>
             </IonMenuToggle>
-
             <IonMenuToggle autoHide={true}>
               <IonItem routerLink="/inventory" routerDirection="root">
                 <IonLabel>Inventory</IonLabel>
               </IonItem>
             </IonMenuToggle>
-
             <IonMenuToggle autoHide={true}>
               <IonItem routerLink="/add-car" routerDirection="root">
                 <IonLabel>Add Car</IonLabel>
@@ -98,7 +82,7 @@ const App: React.FC = () => (
         <Route exact path="/car/:id" component={CarDetails} />
         <Redirect exact from="/" to="/home" />
       </IonRouterOutlet>
-    </IonReactRouter>
+  </IonReactHashRouter>
   </IonApp>
 );
 

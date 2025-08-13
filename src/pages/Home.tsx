@@ -1,6 +1,5 @@
 ;
 import Header from '../components/Header';
-// src/pages/Home.tsx
 import { IonPage, IonContent, IonButton } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -30,7 +29,7 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <h2 style={{ margin: '16px 0' }}>Latest Cars</h2>
+        <h2 style={{ margin: '35px' }}>Latest Cars</h2>
         <InventoryCards cars={latest} />
       </IonContent>
     </IonPage>

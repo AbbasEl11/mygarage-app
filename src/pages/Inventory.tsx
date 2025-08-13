@@ -29,6 +29,7 @@ export interface Car {
   preis: number;
   images: { id: number; image: string }[];
 }
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 /** Reusable card list used by Inventory and Home. */
 export function InventoryCards({
@@ -44,9 +45,10 @@ export function InventoryCards({
   return (
     <div className="car-list">
       {cars.map((car) => {
-        const img = car.images?.[0]?.image;
-        const src =
-          img?.startsWith('http') ? img : img ? `http://127.0.0.1:8000${img}` : undefined;
+const img = car.images?.[0]?.image;
+const src = img
+  ? (img.startsWith('http') ? img : `${API_BASE}${img}`)
+  : undefined;
 
         return (
           <div key={car.id} className="car-card" onClick={() => go(car.id)}>
@@ -72,23 +74,29 @@ const Inventory: React.FC = () => {
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
 
   // Load cars on view enter; fallback to cached list on error.
-  useIonViewWillEnter(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const fetched = await getCars();
+React.useEffect(() => {
+  let alive = true;
+  (async () => {
+    setLoading(true);
+    try {
+      const fetched = await getCars();
+      if (alive) {
         setCars(fetched);
         await storage.set('cars', fetched);
-      } catch (err: any) {
-        console.error(err);
+      }
+    } catch (err: any) {
+      console.error(err);
+      if (alive) {
         setError(err.message || 'Failed to load vehicles');
         const cached = (await storage.get('cars')) || [];
         setCars(cached);
-      } finally {
-        setLoading(false);
       }
-    })();
-  });
+    } finally {
+      if (alive) setLoading(false);
+    }
+  })();
+  return () => { alive = false; };
+}, []);
 
   // Optimistic delete with rollback on failure.
   async function handleDelete(id: number) {
@@ -126,10 +134,13 @@ const Inventory: React.FC = () => {
           <>
             {/* Full cards list */}
             <IonList className="car-list">
-              {cars.map((car) => {
-                const img = car.images?.[0]?.image;
-                const src =
-                  img?.startsWith('http') ? img : img ? `http://127.0.0.1:8000${img}` : undefined;
+                {cars.map((car) => {
+                
+const img = car.images?.[0]?.image;
+const src = img
+  ? (img.startsWith('http') ? img : `${API_BASE}${img}`)
+  : undefined;
+
 
                 return (
                   <IonCard key={car.id} className="car-card">
