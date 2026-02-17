@@ -1,3 +1,10 @@
+/**
+ * Car Details Page Component
+ * 
+ * Displays comprehensive information about a single vehicle including
+ * image gallery, specifications, features, and extras.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import {
@@ -24,15 +31,21 @@ import { chevronBackOutline } from 'ionicons/icons';
 interface Params {
   id: string;
 }
+
 const base = (import.meta.env.BASE_URL || '/mygarage-app/').replace(/\/+$/, '')
 const fallback = `${base}/#/inventory`;   
 
+/**
+ * Vehicle details page with image gallery and specifications
+ * @returns {JSX.Element} Car details page
+ */
 const CarDetails: React.FC = () => {
   const { id } = useParams<Params>();
-  const history = useHistory(); // kept as in original file
+  const history = useHistory();
   const [car, setCar] = useState<any | undefined>(undefined); 
 
-  /** Fetch car by route `id` from local storage once `id` changes. */
+  const capitalize = (str: string) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+
   useEffect(() => {
     (async () => {
       const cars = (await storage.get('cars')) || [];
@@ -41,7 +54,6 @@ const CarDetails: React.FC = () => {
     })();
   }, [id]);
 
-  /** Guard: show fallback page if car was not found. */
   if (!car) {
     return (
       <IonPage>
@@ -74,57 +86,82 @@ const CarDetails: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Details</IonCardTitle>
-          </IonCardHeader>
-
-          {/* Image gallery (Swiper navigation enabled if images exist) */}
-          {car.images && car.images.length > 0 && (
+      <IonContent style={{ '--background': '#0a0e1a' }}>
+        {/* Image Gallery */}
+        {car.images && car.images.length > 0 && (
+          <div style={{ marginBottom: '20px' }}>
             <Swiper navigation modules={[Navigation]} className="mySwiper">
               {car.images.map((imgObj: any, index: number) => (
                 <SwiperSlide key={index}>
                   <img
                     src={imgObj.image}
                     alt={`Bild ${index + 1}`}
-                    className="details-image"
-                    style={{ maxHeight: '300px', objectFit: 'contain' }}
+                    style={{ 
+                      width: '100%',
+                      maxHeight: '400px', 
+                      objectFit: 'cover',
+                      borderRadius: '0'
+                    }}
                   />
                 </SwiperSlide>
               ))}
             </Swiper>
-          )}
+          </div>
+        )}
 
-          <br />
-
-          {/* Visible car name below gallery */}
-          <div className="car-name">
-             <h2>{car.marke} {car.modell}</h2> 
+        <div style={{ padding: '20px', maxWidth: '900px', margin: '0 auto' }}>
+          {/* Car Name Card */}
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            borderRadius: '16px',
+            padding: '24px',
+            marginBottom: '24px',
+            textAlign: 'center',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+          }}>
+            <h1 style={{
+              fontSize: '2rem',
+              color: 'var(--text-strong)',
+              margin: 0,
+              fontFamily: 'Righteous, sans-serif'
+            }}>{car.marke} {car.modell}</h1>
           </div>
 
-          {/* Two-column spec grid (labels/values) */}
-          <div className="details-wrap">
+          {/* Specs Card */}
+          <IonCard style={{
+            background: 'rgba(17, 25, 40, 0.6)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            borderRadius: '16px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
+          }}>
+            <IonCardHeader>
+              <IonCardTitle style={{ color: 'var(--text-strong)', fontSize: '1.5rem' }}>Technische Daten</IonCardTitle>
+            </IonCardHeader>
+
+          <div className="details-wrap" style={{ padding: '20px' }}>
             <div className="detail-label">Baujahr</div>
             <div className="detail-value">{car.baujahr}</div>
 
             <div className="detail-label">Farbe</div>
-            <div className="detail-value">{car.farbe}</div>
+            <div className="detail-value">{capitalize(car.farbe)}</div>
 
             <div className="detail-label">Kilometerstand</div>
             <div className="detail-value">{car.kilometer} km</div>
 
             <div className="detail-label">Unfallhistorie</div>
-            <div className="detail-value">{car.unfallhistorie}</div>
+            <div className="detail-value">{capitalize(car.unfallhistorie)}</div>
 
             <div className="detail-label">Preis</div>
             <div className="detail-value">{car.preis} €</div>
 
             <div className="detail-label">Kraftstoff</div>
-            <div className="detail-value">{car.kraftstoffart}</div>
+            <div className="detail-value">{capitalize(car.kraftstoffart)}</div>
 
             <div className="detail-label">Getriebe</div>
-            <div className="detail-value">{car.getriebe}</div>
+            <div className="detail-value">{capitalize(car.getriebe)}</div>
 
             <div className="detail-label">AU/HU</div>
             <div className="detail-value">{car.au_hu}</div>
@@ -154,9 +191,8 @@ const CarDetails: React.FC = () => {
               {Array.isArray(car.extras) ? car.extras.join(', ') : ''}
             </div>
           </div>
-
-       
-        </IonCard>
+          </IonCard>
+        </div>
       </IonContent>
     </IonPage>
   );

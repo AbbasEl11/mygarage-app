@@ -1,139 +1,234 @@
-# 🚗 MyGarage App (Frontend)
+# 🚗 MyGarage App
 
-This is the **frontend** for the MyGarage application, built with **Ionic + React (TypeScript)**.  
-It connects to a custom backend implemented in **Django REST Framework**.
+**Modern vehicle management application built with Ionic + React (TypeScript)**
 
-➡ **Backend Repository:** [MyGarage Backend (Django REST API)](https://github.com/AbbasEl11/mygarage-backend)
+MyGarage is a full-stack vehicle inventory management system featuring a sleek glassmorphism UI design, comprehensive vehicle data tracking, and real-time image uploads.
 
----
-
-## 📌 Project Status Notice
-
-The main focus for this project was learning to integrate a **custom-built API**.  
-The UI is functional but intentionally not fully polished yet, as most effort went into backend design and integration.
+🌐 **Live Demo:** [https://mygarage.abbas-el-mahmoud.com](https://mygarage.abbas-el-mahmoud.com)  
+📡 **API Backend:** [https://mygarageapi.abbas-el-mahmoud.com/garage](https://mygarageapi.abbas-el-mahmoud.com/garage)  
+🔗 **Backend Repository:** [MyGarage Backend](https://github.com/AbbasEl11/mygarage-backend)
 
 ---
 
 ## ✨ Features
 
-- Ionic + React (TypeScript) frontend
-- Connects to custom Django REST API
-- Vehicle management (list, view, add, edit, delete)
-- API service layer (`carService.ts`)
-- Mobile-ready (Capacitor + Android)
-- Basic theming via `variables.css`
+- **Vehicle Management**: Complete CRUD operations for vehicle inventory
+- **Image Gallery**: Multi-image upload with Swiper-powered gallery viewer
+- **Modern UI**: Glassmorphism design with minimal black/white color scheme
+- **Responsive Design**: Optimized for both mobile and desktop experiences
+- **Offline Caching**: Local storage support for offline access
+- **Real-time Updates**: Automatic page refresh on data changes
+- **Comprehensive Forms**: Detailed vehicle specs, features, and extras tracking
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- Ionic + React (TypeScript)
-- Capacitor (Android)
-- CSS / Ionic Theme Variables
-
+- **Framework**: Ionic 8.5.0 + React 19.0.0
+- **Language**: TypeScript 5.x
+- **Build Tool**: Vite 5.x
+- **Mobile**: Capacitor 7.4.0 (Android ready)
+- **Carousel**: Swiper for image galleries
+- **Storage**: Ionic Storage for offline caching
 
 ### Backend
-- Django REST Framework (Python)
-- SQLite Database
-- Custom CRUD Endpoints
-- Serialization & API protection
-
-
----
-
-## Demo Data
-
-To load demo vehicles into the database, run:
-
-```
-python manage.py loaddata cars_fixture.json
-```
-
-This will insert sample `Car` records (with image paths) into your local database.
+- **Framework**: Django 5.2.3 + Django REST Framework
+- **Database**: SQLite (development) | PostgreSQL ready
+- **Media Handling**: WhiteNoise for static files
+- **Deployment**: Docker + Docker Compose + Traefik
 
 ---
 
-## 📚 API Documentation (Swagger)
+## 🚀 Getting Started
 
-Interactive API documentation is available via Swagger UI.
+### Prerequisites
 
-**URL:** [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/)
+```bash
+Node.js >= 18.x
+npm >= 9.x
+```
 
-You can explore available endpoints, view request/response schemas, and test API calls directly from the browser.
+### Installation
 
-## Screenshots
+1. **Clone the repository**
+```bash
+git clone https://github.com/AbbasEl11/mygarage-app.git
+cd mygarage-app
+```
 
-**MyGarage (Desktop)**
+2. **Install dependencies**
+```bash
+npm install
+```
 
+3. **Configure environment**
+   
+Create `.env.local` in the project root:
+```env
+VITE_API_BASE_URL=https://mygarageapi.abbas-el-mahmoud.com/garage
+```
 
-![Home Desktop](screenshots/MyGarage-Desktop-Home.png)
-![Inventory Desktop](screenshots/MyGarage-Desktop-Inventory.png)
-![Add Car Desktop](screenshots/MyGarage-Desktop-AddCar.png)
-![Add Car 2 Desktop](screenshots/MyGarage-Desktop-AddCar2.png)
+For local development with backend running on localhost:8000:
+```env
+VITE_API_BASE_URL=http://localhost:8000/garage
+```
 
+4. **Start development server**
+```bash
+npm run dev
+```
 
-**MyGarage (Mobile)**
+Application runs at `http://localhost:5173`
 
+---
 
-![Home Mobile](screenshots/MyGarage-Mobile-Home.png)
-![Inventory Mobile](screenshots/MyGarage-Mobile-Inventory.png)
-![Navbar Mobile](screenshots/MyGarage-Mobile-Navbar.png)
-![Add Car Mobile](screenshots/MyGarage-Mobile-AddCar.png)
-![Add Car 2 Mobile](screenshots/MyGarage-Mobile-AddCar2.png)
-![Add Car 3 Mobile](screenshots/MyGarage-Mobile-AddCar3.png)
+## 📦 Building for Production
 
+```bash
+npm run build
+```
+
+Build output: `dist/` directory
+
+### Deployment
+
+The application uses hash-based routing (`/#/route`) for compatibility with static hosting platforms.
+
+**Build artifacts to upload:**
+- All files from `dist/` directory
+
+**Files NOT to upload** (already in `.gitignore`):
+- `node_modules/`
+- `.env.local`, `.env.production`
+- `/android/build/`, `/android/app/build/`
+- `/coverage/`, `/cypress/videos/`
+
+---
 
 ## 📂 Project Structure
 
 ```
 mygarage-app/
-├─ public/
-├─ src/
-│  ├─ components/         # Reusable UI components
-│  ├─ pages/              # Main pages (Home, Inventory, AddCar, CarDetails)
-│  ├─ services/           # API service logic (carService.ts)
-│  ├─ theme/              # Ionic theme variables
-│  ├─ storage.ts          # Local storage handling
-│  └─ main.tsx
-├─ capacitor.config.ts
-├─ ionic.config.json
-├─ package.json
-├─ tsconfig.json
-└─ vite.config.ts
-
+├── src/
+│   ├── components/
+│   │   └── Header.tsx              # Navigation header
+│   ├── pages/
+│   │   ├── Home.tsx                # Landing page with hero section
+│   │   ├── Inventory.tsx           # Vehicle grid with management
+│   │   ├── AddCar.tsx              # Vehicle creation form
+│   │   └── CarDetails.tsx          # Vehicle detail view with gallery
+│   ├── services/
+│   │   └── carService.ts           # API service layer
+│   ├── theme/
+│   │   └── variables.css           # Design system tokens
+│   ├── storage.ts                  # Offline storage config
+│   ├── App.tsx                     # Root component with routing
+│   └── main.tsx                    # Application entry point
+├── public/
+│   ├── logo.png                    # Application logo
+│   └── manifest.json               # PWA manifest
+├── android/                        # Capacitor Android project
+├── capacitor.config.ts             # Capacitor configuration
+├── vite.config.ts                  # Vite build configuration
+└── package.json
 ```
 
 ---
 
-## 🚀 Installation & Run
+## 🎨 Design System
 
-### Prerequisites
-- Node.js >= 18
-- npm or yarn
-- Ionic CLI (`npm install -g @ionic/cli`)
+### Color Scheme
+- **Primary**: Minimal black/white monochrome palette
+- **Background**: Dark (`#0a0e1a`)
+- **Glassmorphism**: `rgba(255, 255, 255, 0.05)` with `backdrop-filter: blur(20px)`
+- **Accents**: White with subtle shadows
 
-### Steps
+### Typography
+- **Headings**: Righteous (Google Fonts)
+- **Body**: System font stack
+
+---
+
+## 🔌 API Integration
+
+The app communicates with a Django REST API backend.
+
+**Base URL**: Configured via `VITE_API_BASE_URL` environment variable
+
+**Endpoints:**
+- `GET /cars/` - List all vehicles
+- `POST /cars/` - Create vehicle
+- `GET /cars/{id}/` - Get vehicle details
+- `DELETE /cars/{id}/` - Delete vehicle
+- `POST /cars/{id}/upload-images/` - Upload vehicle images
+
+API service documentation: See `src/services/carService.ts`
+
+---
+
+## 🧪 Testing
+
+### End-to-End Testing
 ```bash
-# Clone
-git clone https://github.com/AbbasEl11/mygarage-app.git
-cd mygarage-app
+npm run cypress:open
+```
 
-# Install dependencies
-npm install
-
-# Start in dev mode
-npm run dev
-
-# Build for production
-npm run build
-
-# (Optional) Sync with Android via Capacitor
-ionic build
-npx cap sync android
+### Unit Testing
+```bash
+npm test
 ```
 
 ---
 
-## Author
-Developed by [AbbasEl11](https://https://github.com/AbbasEl11)
+## 📱 Mobile Development
+
+### Android Build
+
+1. **Add Android platform**
+```bash
+npx cap add android
+```
+
+2. **Sync web assets**
+```bash
+npm run build
+npx cap sync
+```
+
+3. **Open in Android Studio**
+```bash
+npx cap open android
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Abbas El Mahmoud**
+- GitHub: [@AbbasEl11](https://github.com/AbbasEl11)
+- Website: [abbas-el-mahmoud.com](https://abbas-el-mahmoud.com)
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with [Ionic Framework](https://ionicframework.com/)
+- UI inspiration from modern glassmorphism design trends
+- Background images from [Unsplash](https://unsplash.com/)

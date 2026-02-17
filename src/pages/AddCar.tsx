@@ -1,39 +1,26 @@
-// src/pages/AddCar.tsx
+/**
+ * Add Car Page Component
+ * 
+ * Form page for adding new vehicles to the inventory.
+ * Handles vehicle details, features, extras, and image uploads.
+ */
+
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonItem,
-  IonInput,
-  IonSelect,
-  IonSelectOption,
-  IonTextarea,
-  IonCheckbox,
-  IonButton,
-  IonLabel,
-  IonImg,
-  IonAccordionGroup,
-  IonAccordion,
-} from '@ionic/react';
+import { IonPage, IonContent, useIonViewWillEnter } from '@ionic/react';
 import Header from '../components/Header';
 import { useHistory } from 'react-router-dom';
 import { addCar, uploadImages } from '../services/carService';
+import './AddCar.css';
 
+/**
+ * Add car form component with comprehensive vehicle data collection
+ * @returns {JSX.Element} Add car form page
+ */
 const AddCar: React.FC = () => {
   const history = useHistory();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // ----- Form state -----
+  // Form state
   const [marke, setMarke] = useState('');
   const [modell, setModell] = useState('');
   const [baujahr, setBaujahr] = useState<number>();
@@ -49,419 +36,213 @@ const AddCar: React.FC = () => {
   const [hubraum, setHubraum] = useState<number>();
   const [vin, setVin] = useState('');
   const [sonstigeMerkmale, setSonstigeMerkmale] = useState('');
-
-  // ----- Feature/extra checkboxes state -----
   const [checkboxes, setCheckboxes] = useState<{ [key: string]: boolean }>({});
 
-  /** Toggle a checkbox by its label key (keeps a flat, serializable map). */
+  // File handling
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+
   const handleCheckboxChange = (label: string) => {
     setCheckboxes((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
-  // ----- File selection + previews -----
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
-
-  /** Append newly chosen files, preserving already selected ones. */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
     setSelectedFiles((prev) => [...prev, ...Array.from(files)]);
   };
 
-  /** Remove a file by index and reset file input (allows re-selecting the same file). */
   const handleRemoveFile = (idx: number) => {
     setSelectedFiles((files) => files.filter((_, i) => i !== idx));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  /** Create object URLs for quick client-side previews; revoke previous ones first. */
   useEffect(() => {
     previews.forEach(URL.revokeObjectURL);
     const newPreviews = selectedFiles.map((f) => URL.createObjectURL(f));
     setPreviews(newPreviews);
-  }, [selectedFiles]); // eslint-disable-line react-hooks/exhaustive-deps (intentional: only track selectedFiles)
+  }, [selectedFiles]);
 
-  /** Revoke object URLs on unmount to avoid memory leaks. */
   useEffect(() => {
     return () => previews.forEach(URL.revokeObjectURL);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
-  // ----- Options -----
   const ausstattung = [
-    'Abgedunkelte Scheiben',
-    'ABS',
-    'Abstandswarner',
-    'Adaptives Fahrwerk',
-    'Adaptives Kurvenlicht',
-    'Allradantrieb',
-    'Allwetterreifen',
-    'Beheizbare Frontscheibe',
-    'Berganfahrassistent',
-    'Bi-Xenon Scheinwerfer',
-    'Blendfreies Fernlicht',
-    'Dachreling',
-    'Elektr. Heckklappe',
-    'Elektr. Wegfahrsperre',
-    'ESP',
-    'Faltdach',
-    'Fernlichtassistent',
-    'Geschwindigkeitsbegrenzungsanlage',
-    'Kurvenlicht',
-    'Laserlicht',
-    'LED-Scheinwerfer',
-    'LED-Tagfahrlicht',
-    'Leichtmetallfelgen',
-    'Lichtsensor',
-    'Luftfederung',
-    'Nachtsichtassistent',
-    'Nebelscheinwerfer',
-    'Notbremsassistent',
-    'Notrad',
-    'Pannenkit',
-    'Panoramadach',
-    'Regensensor',
-    'Reifendruckkontrolle',
-    'Reserverad',
-    'Scheibenwischerautomatik',
-    'Schiebedach',
-    'Keyless',
-    'Servolenkung',
-    'Sommerreifen',
-    'Sportfahrwerk',
-    'Sportpaket',
-    'Spurhalteassistent',
-    'Stahlfelgen',
-    'Start/Stopp-Automatik',
-    'Tagfahrlicht',
-    'Totwinkelassistent',
-    'Traktionskontrolle',
-    'Verkehrszeichenerkennung',
-    'Winterreifen',
-    'Xenonscheinwerfer',
-    'Zentralverriegelung',
+    'ABS', 'Abstandswarner', 'Allradantrieb', 'Allwetterreifen', 'Android Auto', 
+    'Apple CarPlay', 'Armlehne', 'Beheizbares Lenkrad', 'Bluetooth', 'Bordcomputer',
+    'Elektr. Fensterheber', 'Freisprecheinrichtung', 'Head-Up Display', 'Isofix',
+    'Navigationssystem', 'Sitzheizung', 'USB', 'WLAN / WiFi Hotspot',
   ];
 
   const extras = [
-    'Alarmanlage',
-    'Ambiente-Beleuchtung',
-    'Android Auto',
-    'Apple CarPlay',
-    'Armlehne',
-    'Beheizbares Lenkrad',
-    'Behindertengerecht',
-    'Bluetooth',
-    'Bordcomputer',
-    'CD-Spieler',
-    'Elektr. Fensterheber',
-    'Elektr. Seitenspiegel',
-    'Freisprecheinrichtung',
-    'Head-Up Display',
-    'Isofix',
-    'Lordosenstütze',
-    'Mikrofon',
-    'Musiksystem integriert',
-    'Navigationssystem',
-    'Radio DAB',
-    'Rechenzähler anzeigen',
-    'Sitzheizung',
-    'Sitzverstellung',
-    'Ski Sack',
-    'Sportpaket',
-    'TCS',
-    'TV',
-    'USB',
-    'Volkswagen Kombination',
-    'WLAN / WiFi Hotspot',
-    'Zentrale Verriegelung',
+    'Abgedunkelte Scheiben', 'Klimaanlage', 'Klimaautomatik', 'Ledersitze', 
+    'Metallic-Lackierung', 'Panoramadach', 'Parksensoren', 'Rückfahrkamera',
+    'Schiebedach', 'Soundsystem', 'Sportfahrwerk', 'Xenon-Scheinwerfer',
   ];
 
-  /** Submit the form: create car, then (optionally) upload selected images. */
   const handleSubmit = async () => {
     try {
       const payload = {
-        marke,
-        modell,
-        baujahr: baujahr!,
-        farbe,
-        kilometer: kilometer!,
-        unfallhistorie,
-        preis: preis!,
-        kraftstoffart,
-        getriebe,
-        au_hu: auHu,
-        leistung: leistung!,
-        gewicht: gewicht!,
-        hubraum: hubraum!,
-        vin,
-        ausstattung: Object.keys(checkboxes).filter(
-          (k) => checkboxes[k] && ausstattung.includes(k),
-        ),
-        extras: Object.keys(checkboxes).filter((k) => checkboxes[k] && extras.includes(k)),
-        sonstigeMerkmale,
+        marke, modell, baujahr: baujahr!, farbe, kilometer: kilometer!,
+        unfallhistorie, preis: preis!, kraftstoffart, getriebe,
+        au_hu: auHu, leistung: leistung!, gewicht: gewicht!,
+        hubraum: hubraum!, vin, sonstigeMerkmale,
+        ausstattung: Object.keys(checkboxes).filter(k => checkboxes[k] && ausstattung.includes(k)),
+        extras: Object.keys(checkboxes).filter(k => checkboxes[k] && extras.includes(k)),
       };
 
       const created = await addCar(payload);
-
-      if (selectedFiles.length) {
-        await uploadImages(created.id, selectedFiles);
-      }
-
+      if (selectedFiles.length) await uploadImages(created.id, selectedFiles);
       history.push('/inventory');
     } catch (err: any) {
       console.error(err);
-      alert(`Fehler beim Speichern: ${err.message}`);
+      alert(`Fehler: ${err.message}`);
     }
   };
 
   return (
     <IonPage>
       <Header />
-      <IonContent className="ion-padding">
-        {/* Vehicle information */}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Fahrzeug-Informationen</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonGrid>
-              <IonRow>
-                <IonCol  size="12" sizeMd="6">
-                  <IonItem>
-                    <IonInput
-                      label="Marke"
-                      labelPlacement="floating"
-                      value={marke}
-                      onIonChange={(e) => setMarke(e.detail.value!)}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Modell"
-                      labelPlacement="floating"
-                      value={modell}
-                      onIonChange={(e) => setModell(e.detail.value!)}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Baujahr"
-                      labelPlacement="floating"
-                      type="number"
-                      value={baujahr?.toString()}
-                      onIonChange={(e) => setBaujahr(Number(e.detail.value))}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Farbe"
-                      labelPlacement="floating"
-                      value={farbe}
-                      onIonChange={(e) => setFarbe(e.detail.value!)}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Kilometerstand"
-                      labelPlacement="floating"
-                      type="number"
-                      value={kilometer?.toString()}
-                      onIonChange={(e) => setKilometer(Number(e.detail.value))}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonSelect
-                      label="Unfallhistorie"
-                      labelPlacement="floating"
-                      value={unfallhistorie}
-                      onIonChange={(e) => setUnfallhistorie(e.detail.value)}
-                    >
-                      <IonSelectOption value="keine">Keine</IonSelectOption>
-                      <IonSelectOption value="ja">Ja</IonSelectOption>
-                    </IonSelect>
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Preis"
-                      labelPlacement="floating"
-                      type="number"
-                      value={preis?.toString()}
-                      onIonChange={(e) => setPreis(Number(e.detail.value))}
-                    />
-                  </IonItem>
-                </IonCol>
+      <IonContent style={{ '--background': '#0a0e1a' }}>
+        <div className="add-car-container">
+          <div className="add-car-header">
+            <h1>Neues Fahrzeug hinzufügen</h1>
+            <p>Füllen Sie die Informationen zu Ihrem Fahrzeug aus</p>
+          </div>
 
-                <IonCol size="12" sizeMd="6">
-                  <IonItem>
-                    <IonSelect
-                      label="Kraftstoff"
-                      labelPlacement="floating"
-                      value={kraftstoffart}
-                      onIonChange={(e) => setKraftstoffart(e.detail.value)}
-                    >
-                      <IonSelectOption value="benzin">Benzin</IonSelectOption>
-                      <IonSelectOption value="diesel">Diesel</IonSelectOption>
-                    </IonSelect>
-                  </IonItem>
-                  <IonItem>
-                    <IonSelect
-                      label="Getriebe"
-                      labelPlacement="floating"
-                      value={getriebe}
-                      onIonChange={(e) => setGetriebe(e.detail.value)}
-                    >
-                      <IonSelectOption value="manuell">Manuell</IonSelectOption>
-                      <IonSelectOption value="automatik">Automatik</IonSelectOption>
-                    </IonSelect>
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="AU/HU"
-                      labelPlacement="stacked"
-                      type="date"
-                      value={auHu}
-                      onIonChange={(e) => setAuHu(e.detail.value!)}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Leistung (PS)"
-                      labelPlacement="floating"
-                      type="number"
-                      value={leistung?.toString()}
-                      onIonChange={(e) => setLeistung(Number(e.detail.value))}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Gewicht (kg)"
-                      labelPlacement="floating"
-                      type="number"
-                      value={gewicht?.toString()}
-                      onIonChange={(e) => setGewicht(Number(e.detail.value))}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="Hubraum (L)"
-                      labelPlacement="floating"
-                      type="number"
-                      value={hubraum?.toString()}
-                      onIonChange={(e) => setHubraum(Number(e.detail.value))}
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonInput
-                      label="VIN"
-                      labelPlacement="floating"
-                      value={vin}
-                      onIonChange={(e) => setVin(e.detail.value!)}
-                    />
-                  </IonItem>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </IonCardContent>
-        </IonCard>
+          {/* Grundinformationen */}
+          <div className="form-section">
+            <h2 className="section-title">Grundinformationen</h2>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Marke *</label>
+                <input type="text" value={marke} onChange={(e) => setMarke(e.target.value)} placeholder="z.B. BMW" />
+              </div>
+              <div className="form-group">
+                <label>Modell *</label>
+                <input type="text" value={modell} onChange={(e) => setModell(e.target.value)} placeholder="z.B. 3er" />
+              </div>
+              <div className="form-group">
+                <label>Baujahr *</label>
+                <input type="number" value={baujahr || ''} onChange={(e) => setBaujahr(Number(e.target.value))} placeholder="2020" />
+              </div>
+              <div className="form-group">
+                <label>Farbe *</label>
+                <input type="text" value={farbe} onChange={(e) => setFarbe(e.target.value)} placeholder="Schwarz" />
+              </div>
+              <div className="form-group">
+                <label>Kilometerstand *</label>
+                <input type="number" value={kilometer || ''} onChange={(e) => setKilometer(Number(e.target.value))} placeholder="50000" />
+              </div>
+              <div className="form-group">
+                <label>Preis (€) *</label>
+                <input type="number" value={preis || ''} onChange={(e) => setPreis(Number(e.target.value))} placeholder="25000" />
+              </div>
+            </div>
+          </div>
 
-{/* Ausstattung */}
-<IonCard>
-  <IonCardHeader><IonCardTitle>Ausstattung</IonCardTitle></IonCardHeader>
-  <IonCardContent>
-    <IonAccordionGroup>
-      <IonAccordion value="ausstattung-acc">
-        <IonItem slot="header">
-          <IonLabel>Show/Hide</IonLabel>
-        </IonItem>
-        <div slot="content">
-          <IonGrid>
-            {Array.from({ length: Math.ceil(ausstattung.length / 4) }, (_, r) => (
-              <IonRow key={r}>
-                {ausstattung.slice(r * 4, r * 4 + 4).map((f) => (
-                  <IonCol size="12" sizeSm="6" sizeMd="4" sizeLg="3" key={f}>
-                    <IonItem lines="none">
-                      <IonCheckbox
-                        checked={checkboxes[f] || false}
-                        onIonChange={() => handleCheckboxChange(f)}
-                        slot="start"
-                      />
-                      <IonLabel>{f}</IonLabel>
-                    </IonItem>
-                  </IonCol>
-                ))}
-              </IonRow>
-            ))}
-          </IonGrid>
-        </div>
-      </IonAccordion>
-    </IonAccordionGroup>
-  </IonCardContent>
-</IonCard>
+          {/* Technische Daten */}
+          <div className="form-section">
+            <h2 className="section-title">Technische Daten</h2>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Kraftstoff *</label>
+                <select value={kraftstoffart} onChange={(e) => setKraftstoffart(e.target.value as any)}>
+                  <option value="benzin">Benzin</option>
+                  <option value="diesel">Diesel</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Getriebe *</label>
+                <select value={getriebe} onChange={(e) => setGetriebe(e.target.value as any)}>
+                  <option value="manuell">Manuell</option>
+                  <option value="automatik">Automatik</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Leistung (PS) *</label>
+                <input type="number" value={leistung || ''} onChange={(e) => setLeistung(Number(e.target.value))} placeholder="150" />
+              </div>
+              <div className="form-group">
+                <label>Hubraum (L) *</label>
+                <input type="number" step="0.1" value={hubraum || ''} onChange={(e) => setHubraum(Number(e.target.value))} placeholder="2.0" />
+              </div>
+              <div className="form-group">
+                <label>Gewicht (kg) *</label>
+                <input type="number" value={gewicht || ''} onChange={(e) => setGewicht(Number(e.target.value))} placeholder="1500" />
+              </div>
+              <div className="form-group">
+                <label>Unfallhistorie *</label>
+                <select value={unfallhistorie} onChange={(e) => setUnfallhistorie(e.target.value as any)}>
+                  <option value="keine">Keine</option>
+                  <option value="ja">Ja</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
-{/* Extras */}
-<IonCard>
-  <IonCardHeader><IonCardTitle>Extras</IonCardTitle></IonCardHeader>
-  <IonCardContent>
-    <IonAccordionGroup>
-      <IonAccordion value="extras-acc">
-        <IonItem slot="header">
-          <IonLabel>Show/Hide</IonLabel>
-        </IonItem>
-        <div slot="content">
-          <IonGrid>
-            {Array.from({ length: Math.ceil(extras.length / 4) }, (_, r) => (
-              <IonRow key={r}>
-                {extras.slice(r * 4, r * 4 + 4).map((f) => (
-                  <IonCol size="12" sizeSm="6" sizeMd="4" sizeLg="3" key={f}>
-                    <IonItem lines="none">
-                      <IonCheckbox
-                        checked={checkboxes[f] || false}
-                        onIonChange={() => handleCheckboxChange(f)}
-                        slot="start"
-                      />
-                      <IonLabel>{f}</IonLabel>
-                    </IonItem>
-                  </IonCol>
-                ))}
-              </IonRow>
-            ))}
-          </IonGrid>
-        </div>
-      </IonAccordion>
-    </IonAccordionGroup>
-  </IonCardContent>
-</IonCard>
-
-
-        {/* Additional notes */}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Sonstige Merkmale</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonItem>
-              <IonTextarea
-                value={sonstigeMerkmale}
-                onIonChange={(e) => setSonstigeMerkmale(e.detail.value!)}
-                placeholder="Zusätzliche Merkmale"
-                style={{ height: '100px' }}
+          {/* Weitere Details */}
+          <div className="form-section">
+            <h2 className="section-title">Weitere Details</h2>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>AU/HU</label>
+                <input type="date" value={auHu} onChange={(e) => setAuHu(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>VIN</label>
+                <input type="text" value={vin} onChange={(e) => setVin(e.target.value)} placeholder="Fahrzeug-Identifikationsnummer" />
+              </div>
+            </div>
+            <div className="form-group full-width">
+              <label>Sonstige Merkmale</label>
+              <textarea 
+                value={sonstigeMerkmale} 
+                onChange={(e) => setSonstigeMerkmale(e.target.value)} 
+                placeholder="Weitere Details zum Fahrzeug..."
+                rows={4}
               />
-            </IonItem>
-          </IonCardContent>
-        </IonCard>
+            </div>
+          </div>
 
-        {/* Image upload */}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Datei-Upload</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonItem lines="none">
-              <IonButton expand="block" onClick={() => fileInputRef.current?.click()}>
-                Bild hinzufügen
-              </IonButton>
+          {/* Ausstattung */}
+          <div className="form-section">
+            <h2 className="section-title">Ausstattung</h2>
+            <div className="checkbox-grid">
+              {ausstattung.map((item) => (
+                <label key={item} className="checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={checkboxes[item] || false}
+                    onChange={() => handleCheckboxChange(item)}
+                  />
+                  <span>{item}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Extras */}
+          <div className="form-section">
+            <h2 className="section-title">Extras</h2>
+            <div className="checkbox-grid">
+              {extras.map((item) => (
+                <label key={item} className="checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={checkboxes[item] || false}
+                    onChange={() => handleCheckboxChange(item)}
+                  />
+                  <span>{item}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Bilder Upload */}
+          <div className="form-section">
+            <h2 className="section-title">Fahrzeugbilder</h2>
+            <div className="file-upload-area">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -470,25 +251,36 @@ const AddCar: React.FC = () => {
                 accept="image/*"
                 onChange={handleFileChange}
               />
-            </IonItem>
+              <button className="btn-upload" onClick={() => fileInputRef.current?.click()}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Bilder hinzufügen
+              </button>
+              
+              {previews.length > 0 && (
+                <div className="upload-grid" style={{ marginTop: '20px' }}>
+                  {previews.map((url, i) => (
+                    <div key={i} className="upload-cell">
+                      <img src={url} alt={`Preview ${i + 1}`} className="upload-thumb" />
+                      <button className="upload-remove" onClick={() => handleRemoveFile(i)}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
 
-{previews.length > 0 && (
-  <div className="upload-grid">
-    {previews.map((url, i) => (
-      <div key={i} className="upload-cell">
-        <IonImg src={url} className="upload-thumb" />
-        <button className="upload-remove" onClick={() => handleRemoveFile(i)}>×</button>
-      </div>
-    ))}
-  </div>
-)}
-
-          </IonCardContent>
-        </IonCard>
-
-        <IonButton expand="block" color="primary" onClick={handleSubmit}>
-          Auto speichern
-        </IonButton>
+          {/* Submit Button */}
+          <div className="form-actions">
+            <button className="btn-cancel" onClick={() => history.push('/inventory')}>
+              Abbrechen
+            </button>
+            <button className="btn-submit" onClick={handleSubmit}>
+              Fahrzeug speichern
+            </button>
+          </div>
+        </div>
       </IonContent>
     </IonPage>
   );

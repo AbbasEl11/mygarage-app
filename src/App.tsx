@@ -1,4 +1,10 @@
-// App.tsx
+/**
+ * MyGarage Application Root Component
+ * 
+ * Main application shell that provides routing and navigation structure.
+ * Uses Ionic's hash-based routing for compatibility with static hosting.
+ */
+
 import storage from './storage';
 storage.create();
 
@@ -35,11 +41,13 @@ import './theme/variables.css';
 
 setupIonicReact();
 
+/**
+ * Root application component with routing configuration
+ * @returns {JSX.Element} Application shell with navigation and route definitions
+ */
 const App: React.FC = () => (
   <IonApp>
-    {/* ✅ HashRouter statt IonReactRouter */}
-<IonReactHashRouter basename="/mygarage-app">
-      {/* Slide-in menu (mobile) */}
+    <IonReactHashRouter>
       <IonMenu contentId="main" side="end">
         <IonHeader>
           <IonToolbar>

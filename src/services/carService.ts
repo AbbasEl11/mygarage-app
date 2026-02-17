@@ -1,3 +1,13 @@
+/**
+ * Car Service Module
+ * 
+ * API service for vehicle CRUD operations and image uploads.
+ * Handles communication with the Django REST backend.
+ */
+
+/**
+ * Vehicle creation payload interface
+ */
 export interface CarPayload {
   marke: string;
   modell: string;
@@ -18,6 +28,9 @@ export interface CarPayload {
   sonstigeMerkmale: string;
 }
 
+/**
+ * Complete vehicle data with server-generated fields
+ */
 export interface Car extends CarPayload {
   id: number;
    images: { id: number; image: string }[];
@@ -25,7 +38,12 @@ export interface Car extends CarPayload {
 
 const BASE = import.meta.env.VITE_API_BASE_URL;
 
-/** Upload multiple image files for a given car ID. */
+/**
+ * Uploads multiple images for a vehicle
+ * @param {number} carId - Vehicle ID
+ * @param {File[]} files - Array of image files to upload
+ * @throws {Error} If upload fails
+ */
 export async function uploadImages(carId: number, files: File[]) {
   const form = new FormData();
   files.forEach((f) => form.append('images', f));
@@ -40,7 +58,11 @@ export async function uploadImages(carId: number, files: File[]) {
   }
 }
 
-/** Retrieve all cars from the backend. */
+/**
+ * Retrieves all vehicles from the backend
+ * @returns {Promise<Car[]>} Array of all vehicles
+ * @throws {Error} If request fails
+ */
 export async function getCars(): Promise<Car[]> {
   const res = await fetch(`${BASE}/cars/`);
   if (!res.ok) {
@@ -49,7 +71,12 @@ export async function getCars(): Promise<Car[]> {
   return res.json();
 }
 
-/** Create a new car entry in the backend. */
+/**
+ * Creates a new vehicle entry
+ * @param {CarPayload} car - Vehicle data to create
+ * @returns {Promise<Car>} Created vehicle with server-generated ID
+ * @throws {Error} If creation fails with backend validation errors
+ */
 export async function addCar(car: CarPayload): Promise<Car> {
   const res = await fetch(`${BASE}/cars/`, {
     method: 'POST',
@@ -67,8 +94,9 @@ export async function addCar(car: CarPayload): Promise<Car> {
 }
 
 /**
- * Delete a car entry by its ID.
- * Handles both 204 No Content and JSON error responses gracefully.
+ * Deletes a vehicle by ID
+ * @param {string | number} id - Vehicle ID to delete
+ * @throws {Error} If deletion fails
  */
 export async function deleteCarById(id: string | number): Promise<void> {
   const res = await fetch(`${BASE}/cars/${id}/`, { method: 'DELETE' });
